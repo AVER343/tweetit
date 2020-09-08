@@ -16,9 +16,11 @@ if(!process.env.PORT)
 {
     process.env.PORT=5000
 }
-app.use(function(req, res) {
-	res.sendFile(path.join(__dirname, '../client/build/index.html'));
-});
+app.use(express.static('client/build'))
+app.use("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+    });
+app.listen(PORT,()=>console.log(`LISTENING AT ${PORT}`))
 app.listen(process.env.PORT,()=>{
     console.log(`Listening to port ${process.env.PORT}`)
 })
