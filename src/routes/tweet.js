@@ -17,10 +17,6 @@ const upload=multer({
     }
 })
 const router = express.Router()
-router.get('/',async(req,res)=>{
-    const get = await Tweet.find()
-    res.send({data:get})
-})
 router.get('/tweet/:username/all',auth,async(req,res)=>{
     try{
     const {username}=req.params
