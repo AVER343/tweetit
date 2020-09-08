@@ -1,0 +1,18 @@
+const express = require('express')
+const Tweet=require('./routes/tweet')
+var multer  = require('multer')
+var upload = multer()
+const bodyParser= require('body-parser')
+require('./db/mongoose')
+const cors = require('cors')
+const app=express()
+const User=require('./routes/user')
+app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.json())
+app.use(cors())
+app.use(Tweet)
+app.use(User)
+const PORT=5000
+app.listen(PORT,()=>{
+    console.log(`Listening to port ${PORT}`)
+})
