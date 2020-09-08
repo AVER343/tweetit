@@ -13,6 +13,6 @@ app.use(cors())
 app.use(Tweet)
 app.use(User)
 const PORT=5000
-app.listen(PORT,()=>{
+app.listen(process.env.PORT||PORT,()=>{
     console.log(`Listening to port ${PORT}`)
 })
