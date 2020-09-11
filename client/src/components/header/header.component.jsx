@@ -1,10 +1,10 @@
 import React from 'react'
 import Nav from 'react-bootstrap/Nav'
-import FormControl from 'react-bootstrap/FormControl'
 import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button'
 import Navbar from 'react-bootstrap/Navbar'
 import {Link} from 'react-router-dom'
+import { connect } from 'react-redux'
+import { asyncLogOut } from '../../redux/users/users.actions'
 const Header=(props)=>(
         <Navbar bg="dark" variant="dark">
             <Navbar.Brand>
@@ -18,12 +18,18 @@ const Header=(props)=>(
                 
             </Nav>
             <Form inline>
-            {props.username?<Nav.Link><Link to="/" style={{color:"white"}}>EMAIL :  {` ${props.email}`}</Link></Nav.Link>:null}
-            {props.username?<Nav.Link><Link to="/" style={{color:"white"}}>USERNAME : {` ${props.username}`}</Link></Nav.Link>:null}
+            {props.user?<Nav.Link><Link to="/" style={{color:"white"}}>EMAIL :  {` ${props.user.email}`}</Link></Nav.Link>:null}
+            {props.user?<Nav.Link><Link to="/" style={{color:"white"}}>USERNAME : {` ${props.user.username}`}</Link></Nav.Link>:null}
                <Nav.Link><Link to="/toptags">{"Top Tags".toUpperCase()}</Link></Nav.Link>
-               {props.username?null:<Nav.Link href=""><Link to="/login">{"login".toUpperCase()}</Link></Nav.Link>}
-               {props.username?<Nav.Link href="#"><Link to={`/${props.username}/all`}>{"your tweets".toUpperCase()}</Link></Nav.Link>:null}
-               {props.username?<Nav.Link href="#" onClick={props.handleSignOut}>{"Signout".toUpperCase()}</Nav.Link>:null}
+               {props.user?null:<Nav.Link href=""><Link to="/login">{"login".toUpperCase()}</Link></Nav.Link>}
+               {props.user?<Nav.Link href="#"><Link to={`/${props.user.username}/all`}>{"your tweets".toUpperCase()}</Link></Nav.Link>:null}
+               {props.user?<Nav.Link href="#" onClick={()=>props.LOGOUT()}>{"Signout".toUpperCase()}</Nav.Link>:null}
             </Form>
         </Navbar>)
- export default Header
+const mapStateToProps=(state)=>({
+      user:state.user
+        })
+const dispatchStateToProps=dispatch=>({
+  LOGOUT:()=>dispatch(asyncLogOut())
+})
+ export default connect(mapStateToProps,dispatchStateToProps)(Header)
