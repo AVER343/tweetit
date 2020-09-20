@@ -26,12 +26,22 @@ router.post('/add/friend/:name',auth,async(req,res)=>{
     res.sendStatus(200)
 })  
 router.get('/friends/sent',auth,async(req,res)=>{
-    let reqSentTo = await User.find({'_id': { $in: req.user.reqSent.map(elem=>mongoose.Types.ObjectId(elem.toString()))}}).select('image _id profile.email name')
-     res.send(reqSentTo)
+        try{
+            let reqSentTo = await User.find({'_id': { $in: req.user.reqSent.map(elem=>mongoose.Types.ObjectId(elem.toString()))}}).select('image _id profile.email name')
+            res.send(reqSentTo)
+        }
+     catch(e){
+        console.log(e)
+    }
 })
 router.get('/friends/received',auth,async(req,res)=>{
+   try{
     let reqReceivedFrom = await User.find({'_id': { $in: req.user.reqReceived.map(elem=>mongoose.Types.ObjectId(elem.toString()))}}).select('image name email')
     res.send(reqReceivedFrom)
+   }
+   catch(e){
+       console.log(e)
+   }
 })
 // router.get('/friends',auth,async(req,res)=>{
 //     let reqSentTo = await User.find({'_id': { $in: req.user.reqSent.map(elem=>mongoose.Types.ObjectId(elem.toString()))}}).select('image name email')
@@ -76,7 +86,6 @@ router.delete('/friends/request/recieved/:name',auth,async(req,res)=>{
 router.post('/friends/request/recieved/:name',auth,async(req,res)=>{
     const {name}=req.params
     const user = await User.findOne({name})
-    console.log(req.user.reqReceived,user.reqSent)
     if(req.user.reqReceived && user.reqSent)
     {
         req.user.reqReceived=req.user.reqReceived.filter(elem=>elem.toString()!=user._id.toString())
@@ -85,9 +94,8 @@ router.post('/friends/request/recieved/:name',auth,async(req,res)=>{
     if(!req.user.friends.includes(user._id.toString()))
     {
         req.user.friends.push(user._id)
-        user.friends.push(user._id)
+        user.friends.push(req.user._id)
     }
-    console.log(req.user.reqReceived,user.reqSent)
     await req.user.save()
     await user.save()
     res.send(200)

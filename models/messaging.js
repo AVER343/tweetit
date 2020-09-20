@@ -3,7 +3,7 @@ const MessagingSchema=mongoose.Schema({
     user1:mongoose.Types.ObjectId,
     user2:mongoose.Types.ObjectId,
     messaging:[{
-        author:mongoose.Types.ObjectId,
+        author:String,
         message:String
     }]
 })

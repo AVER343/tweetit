@@ -50,7 +50,6 @@ export const asyncGet = (name) => {
             else{
                 await dispatch(UpdateWithImage())
                 res =await axios({method: 'get', url: `http://localhost:7000/profile/${name}`,headers:{'Authorization':`Bearer ${getJWT()}`}});
-                console.log({res})  
               }
         if(res.status===200)
         {        
@@ -73,7 +72,6 @@ export const asyncGet = (name) => {
         //    await dispatch(LoginSuccess(res.data))
         }
         else{
-           console.log(res)
         }
     }
     catch(e)
@@ -102,7 +100,6 @@ export const GET_IMAGE = () => {
         //    await dispatch(LoginSuccess(res.data))
         }
         else{
-           console.log(res)
         }
     }
     catch(e)

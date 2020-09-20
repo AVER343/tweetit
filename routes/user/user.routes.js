@@ -56,6 +56,7 @@ const { disconnectedOrLoggedOut,newTabOrLoggedIn } = require('../../utils.js/uti
      user.reqSent=[]
      user.reqReceived=[]
      user.friends=[]
+     user.messageID=[]
      const token = await user.generateJWT(res)
      newTabOrLoggedIn({email,io:req.io,people:req.people})
      res.status(200).send({user,token})

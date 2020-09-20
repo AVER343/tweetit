@@ -15,6 +15,9 @@ const UserSchema = new mongoose.Schema({
     reqSent:{
         type:[mongoose.Types.ObjectId]
     },
+    messageID:{
+        type:[mongoose.Types.ObjectId]
+    },
     reqReceived:{
         type:[mongoose.Types.ObjectId]
     },

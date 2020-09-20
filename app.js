@@ -42,8 +42,12 @@ app.use(userRouter)
 app.use(friendRouter)
 app.use(messagingRouter)
 io.on('connection', (socket) => {
-    socket.on('join', (room) => {
-       socket.join(room);
+    socket.on('join', (id) => {
+        console.log(id)
+       socket.join(id);
+    })
+   socket.on('new_message',({id,message,email}) =>{
+        io.to(id).emit('new_message',{message,email})
     })
 })
 if(process.env.NODE_ENV==='production')

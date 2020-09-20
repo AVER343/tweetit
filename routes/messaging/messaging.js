@@ -21,13 +21,11 @@ router.get('/messages/:name',auth,async(req,res)=>{
     return res.status(200).send({message:messages})
 })
 router.post('/messages/:name',auth,async(req,res)=>{
-    var io = req.io
     const {name} = req.params
     const {message}=req.body
     const user = await User.findOne({name})
     if(!user){
         return res.status(400).send({errors:[{error:'User  does not exist !'}]})
-
     }
     // if(req.user.friends.find(elem=>elem.toString()==user._id.toString()))
     // {
@@ -45,9 +43,10 @@ router.post('/messages/:name',auth,async(req,res)=>{
     if(intersection.length==0)
     {
         messages = new Message({user1:req.user._id,user2:user._id})
+        messages.messaging=[]
+        messages=await messages.save()
         req.user.messageID.push(messages._id)
         user.messageID.push(messages._id)
-        messages.messaging=[]
         let b= await user.save()
         let c= await req.user.save()
         await Promise.all([b,c])
@@ -57,7 +56,6 @@ router.post('/messages/:name',auth,async(req,res)=>{
     }
     messages.messaging.push({message,author:req.user.name})
     await messages.save()
-    io.in(messages._id.toString()).emit('NEW_MESSAGE',message)
     return res.status(200).send({message:messages})
 })
 module.exports = router

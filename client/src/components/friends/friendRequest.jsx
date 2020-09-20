@@ -26,7 +26,6 @@ const FriendRequestReceived=()=>{
     const acceptReceivedRequest =async(name)=>{
        try{
             let friends =await axios({url:'http://localhost:7000/friends/request/recieved/'+name,method:'POST',headers:{'Authorization':'Bearer '+getJWT()}})
-            console.log(friends)
             if(friends.status==200)
             {
                 newFunc()

@@ -55,7 +55,6 @@ export const asyncLogIn = (user) => {
     }
     catch(e)
     {
-        console.log(JSON.stringify(e))
         // dispatch(ERROR_ADDING(e.response.data))
     }
     };
