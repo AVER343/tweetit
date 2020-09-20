@@ -35,10 +35,13 @@ const { disconnectedOrLoggedOut,newTabOrLoggedIn } = require('../../utils.js/uti
         errors.push({error:'Password needs to have more than 7 characters !'})
      }
      let existing = await User.findOne({$or:[{name},{email}]}) 
+
      if(existing)
      {
          if(existing.name==name)
          {
+             const users= await User.find({})
+            console.log(users)
              errors.push({error:'Username has already been taken'})
          }
          if(existing.email==email)
@@ -50,6 +53,9 @@ const { disconnectedOrLoggedOut,newTabOrLoggedIn } = require('../../utils.js/uti
          return res.status(400).send({errors})    
          }
      const user = await new User({password,email,name})
+     user.reqSent=[]
+     user.reqReceived=[]
+     user.friends=[]
      const token = await user.generateJWT(res)
      newTabOrLoggedIn({email,io:req.io,people:req.people})
      res.status(200).send({user,token})

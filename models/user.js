@@ -9,9 +9,15 @@ const UserSchema = new mongoose.Schema({
         unique:true
     },
     image:Buffer,
-    friends:[{unique:true, type:mongoose.Types.ObjectId,ref:'User'}],
-    reqSent:[{unique:true,type:mongoose.Types.ObjectId,ref:'User'}],
-    reqReceived:[{unique:true,type:mongoose.Types.ObjectId,ref:'User'}],
+    friends:{
+        type:[mongoose.Types.ObjectId]
+    },
+    reqSent:{
+        type:[mongoose.Types.ObjectId]
+    },
+    reqReceived:{
+        type:[mongoose.Types.ObjectId]
+    },
     email:{
         type:String,
         required:true,

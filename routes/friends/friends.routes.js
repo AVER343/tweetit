@@ -39,8 +39,7 @@ router.get('/friends/received',auth,async(req,res)=>{
 // })
 router.get('/friends/isfriend/:name',auth,async(req,res)=>{
    try{
-    let user = await User.findOne({name:req.params.name}).select('_id friends')
-    
+    let user = await User.findOne({name:req.params.name}).select('_id')
     if(req.user.friends.includes(user._id.toString())||req.user.reqSent.includes(user._id.toString())||req.user.reqReceived.includes(user._id.toString()))
     {
        return res.send({isfriend:true})
@@ -70,6 +69,7 @@ router.delete('/friends/request/recieved/:name',auth,async(req,res)=>{
     const user = await User.findOne({name})
     req.user.reqReceived=req.user.reqReceived.filter(elem=>elem!=user._id.toString())
     user.reqSent=user.reqSent.filter(elem=>elem.toString()!=req.user._id.toString())
+    console.log(req.user.reqReceived.length)
     await req.user.save()
     await user.save()
     res.send(200)
