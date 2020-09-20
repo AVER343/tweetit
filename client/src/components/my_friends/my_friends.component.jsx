@@ -13,7 +13,7 @@ const MyFriends=()=>{
             await setFriends(friends.data)
             }
         newFunc()
-    })
+    },[])
     return(<div>
         <Table striped bordered hover>
         <thead>

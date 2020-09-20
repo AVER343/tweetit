@@ -9,7 +9,10 @@ const mongoose = require('mongoose');
 router.get('/messages/:name',auth,async(req,res)=>{
     const {name} = req.params
     const user = await User.findOne({name})
-    let intersection = req.user.messageID.filter(x => user.messageID.includes(x));
+    let intersection =[]
+   if(req.user.messageID){
+    intersection= req.user.messageID.filter(x => user.messageID.includes(x));
+   }
     if(intersection.length==0)
     {
         return res.status(200).send({message:[]})
@@ -31,7 +34,14 @@ router.post('/messages/:name',auth,async(req,res)=>{
     //     return res.status(400).send({errors:[{error:'User is not a friend !'}]})
     // }
     let messages
-    let intersection = req.user.messageID.filter(x => user.messageID.includes(x));
+    let intersection=[]
+   if(req.user.messageID)
+   {
+    intersection  = req.user.messageID.filter(x => user.messageID.includes(x));
+   }
+   else{
+    req.user.messageID=[] 
+   }
     if(intersection.length==0)
     {
         messages = new Message({user1:req.user._id,user2:user._id})

@@ -69,7 +69,6 @@ router.delete('/friends/request/recieved/:name',auth,async(req,res)=>{
     const user = await User.findOne({name})
     req.user.reqReceived=req.user.reqReceived.filter(elem=>elem!=user._id.toString())
     user.reqSent=user.reqSent.filter(elem=>elem.toString()!=req.user._id.toString())
-    console.log(req.user.reqReceived.length)
     await req.user.save()
     await user.save()
     res.send(200)
@@ -77,13 +76,18 @@ router.delete('/friends/request/recieved/:name',auth,async(req,res)=>{
 router.post('/friends/request/recieved/:name',auth,async(req,res)=>{
     const {name}=req.params
     const user = await User.findOne({name})
-    req.user.reqReceived=req.user.reqReceived.filter(elem=>elem.toString()!=user._id.toString())
-    user.reqSent=user.reqSent.filter(elem=>elem.toString()!=user._id.toString())
+    console.log(req.user.reqReceived,user.reqSent)
+    if(req.user.reqReceived && user.reqSent)
+    {
+        req.user.reqReceived=req.user.reqReceived.filter(elem=>elem.toString()!=user._id.toString())
+        user.reqSent=user.reqSent.filter(elem=>elem.toString()!=req.user._id.toString())
+    }
     if(!req.user.friends.includes(user._id.toString()))
     {
         req.user.friends.push(user._id)
         user.friends.push(user._id)
     }
+    console.log(req.user.reqReceived,user.reqSent)
     await req.user.save()
     await user.save()
     res.send(200)

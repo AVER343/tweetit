@@ -131,6 +131,9 @@ UserSchema.pre('save', async function (next) {
     if (user.isModified('password')) {
         user.password = await bcrypt.hash(user.password, 8)
     }
+    if (user.isModified('friends')) {
+        user.friends = user.friends.filter(elem=>elem.toString()!=user._id.toString())
+    }
     next()
 })
 const User=mongoose.model('User',UserSchema)
