@@ -32,9 +32,9 @@ class SignUp extends React.Component {
    <Form.Group >
       <Form.Label>Email address</Form.Label>
       <Form.Control value={this.state.email} name='email' onChange={this.handleChange} type="email" placeholder="Enter email" />
-      <Form.Text className="text-muted">
+     {/* { <Form.Text className="text-muted">
         We'll never share your email with anyone else.
-      </Form.Text>
+      </Form.Text>} */}
     </Form.Group>
     <Form.Group >
       <Form.Label>Password</Form.Label>
@@ -47,7 +47,7 @@ class SignUp extends React.Component {
     <Form.Group controlId="formBasicCheckbox">
       <Form.Check type="checkbox" label="Check me out" />
     </Form.Group>
-    <Button onClick={this.handleSubmit} variant="primary" type="submit">
+    <Button onClick={this.handleSubmit} variant="outline-primary" type="submit">
       Submit
     </Button>
   </Form>)

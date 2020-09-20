@@ -1,10 +1,12 @@
+import { Container, Row } from 'react-bootstrap'
+
 import React from 'react'
-import axios from 'axios'
 import SingleCard from '../card/card'
 import SpinnerValue from '../spinner/spinner'
-import {  withRouter } from 'react-router'
-import { Container, Row } from 'react-bootstrap'
+import axios from 'axios'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router'
+
 class YourTweet extends React.Component{
     constructor(props){
         super(props)
@@ -14,31 +16,25 @@ class YourTweet extends React.Component{
         }
     }
     async componentDidMount(){
-            if(window.localStorage.getItem('tweets')!=(''||null))
-            {
-                this.setState({loaded:true,data:[...JSON.parse(window.localStorage.getItem('tweets'))]})
-            }
             await this.trymakeRequest(8)
     }
     trymakeRequest=async(num)=>{
         try {
-             const res = await axios({url:`/tweet/${this.props.user.username}/all`, headers:{'Authorization':`Bearer ${this.props.user.token}`}})
-             console.log(this.props)
+            let name = this.props.location.pathname.split('/')
+             const res = await axios({url:`http://localhost:7000/tweet/${name[1]}/all`, headers:{'Authorization':`Bearer ${this.props.user.token}`}})
              if(res.status==200)
-         { 
-            if(res.data.tweets[0])
-            {
-                await this.setState({data:res.data.tweets[0].tweet})
-                await this.setState({loaded:true})
-            }
-            else{
-                await this.setState({data:[]})
-                await this.setState({loaded:true})
-            }
-             await window.localStorage.setItem('tweets',JSON.stringify(this.state.data.splice(0,num)))
+            { 
+                if(res.data.tweets[0])
+                {
+                    await this.setState({data:res.data.tweets[0].tweet})
+                    await this.setState({loaded:true})
+                }
+                else{
+                    await this.setState({data:[]})
+                    await this.setState({loaded:true})
+                }
          }
          else{
-             console.log("Something went wrong !")
              await this.makeRequest()
          }}
          catch(e){
@@ -47,16 +43,13 @@ class YourTweet extends React.Component{
      }
     makeRequest=async()=>{
        try {
-            const res = await axios({url:`/tweet/${this.props.user.username}/all`, headers:{'Authorization':`Bearer ${this.props.user.token}`}})
-            console.log(res)
+            const res = await axios({url:`http://localhost:7000/tweet/${this.props.user.username}/all`, headers:{'Authorization':`Bearer ${this.props.user.token}`}})
             if(res.status==200)
         {
             await this.setState({data:res.data.tweets[0].tweet})
            await this.setState({loaded:true})
-            await window.localStorage.setItem('tweets',JSON.stringify(this.state.data.splice(0,5)))
         }
         else{
-            console.log("Something went wrong !")
             await this.makeRequest()
         }}
         catch(e){

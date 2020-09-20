@@ -1,11 +1,12 @@
+import {Col, Container, Row, Spinner} from 'react-bootstrap'
+
+import {Button} from 'react-bootstrap'
+import OneTable from '../table/table'
+import React from 'react'
+import SpinnerValue from '../spinner/spinner'
 import axios from 'axios'
 import { get } from 'mongoose'
-import React from 'react'
-import {Col,Row,Container, Spinner} from 'react-bootstrap'
-import {Button} from 'react-bootstrap'
-import SpinnerValue from '../spinner/spinner'
 
-import OneTable from '../table/table'
 class TopTags extends React.Component{
     constructor(){
         super()
@@ -16,7 +17,7 @@ class TopTags extends React.Component{
         }
     }
     async componentDidMount(){
-        const getData = await axios({url:'http://localhost:7000/hashtags',method:'POST',data:{top:this.state.top}})
+        const getData = await axios({url:'/hashtags',method:'POST',data:{top:this.state.top}})
         if(getData.status==200)
         {
             this.setState({data:getData.data.hashtags,loaded:true})
@@ -24,7 +25,7 @@ class TopTags extends React.Component{
     }
     handleDataChange=async()=>{
         await this.setState({top:this.state.top+6})
-        const getData = await axios({url:'http://localhost:7000/hashtags',method:'POST',data:{top:this.state.top}})
+        const getData = await axios({url:'/hashtags',method:'POST',data:{top:this.state.top}})
         if(getData.status==200)
         {
             this.setState({data:getData.data.hashtags,loaded:true})
@@ -45,6 +46,7 @@ class TopTags extends React.Component{
                         size="sm"
                         role="status"
                         aria-hidden="true"
+                        title="Loading"
                     />
                         Loading...
                     </Button>

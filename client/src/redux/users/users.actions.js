@@ -1,7 +1,9 @@
+import {ERROR_ADDING, ERROR_DELETING} from '../error/error.actions'
+
 import ACTION_TYPES from "./user.actions.types";
 import axios from "axios";
-import {ERROR_ADDING,ERROR_DELETING} from '../error/error.actions'
 import { getJWT } from "./users.utils";
+
 export const Login =()=>({
     type:ACTION_TYPES.LOGIN
 })
@@ -19,7 +21,7 @@ export const asyncLogIn = (user) => {
     return async (dispatch) => {
         const{email,password}=user
     try{
-        const res=await axios.post('/login', {email,password})
+        const res=await axios.post('http://localhost:7000/login', {email,password})
         if(res.status===200)
         {        
            await dispatch(ERROR_DELETING())
@@ -32,16 +34,17 @@ export const asyncLogIn = (user) => {
     }
     catch(e)
     {
+       if(e.response){
         dispatch(ERROR_ADDING(e.response.data))
-        dispatch(LoginFailure())
+       }
+       dispatch(LoginFailure())
     }
     };
   };
   export const asyncLogOut = () => {
     return async (dispatch) => {
-        dispatch(Logout());
     try{        
-        const res =await axios({method: 'post', url: '/logout',headers:{'Authorization':`Bearer ${getJWT()}`}});
+        const res =await axios({method: 'post', url: 'http://localhost:7000/logout',headers:{'Authorization':`Bearer ${getJWT()}`}});
         if(res.status===200)
         {            
             dispatch(Logout())
@@ -61,21 +64,25 @@ export const asyncLogIn = (user) => {
     return async (dispatch) => 
     {
         try{
-            const res=await axios.post('/signup', {...user})
+            const res=await axios.post('http://localhost:7000/signup', {...user})
             if(res.status===200)
             {         
                 await dispatch(ERROR_DELETING())
                 await dispatch(LoginSuccess(res.data))
             }
             else{     
-                console.log(res.data)
                 dispatch(Logout());
             }
         }
         catch(e)
         {
-            dispatch(ERROR_ADDING(e.response.data))
-            console.error(e.response.data)
+            if(e.response)
+            {
+                dispatch(ERROR_ADDING(e.response.data))
+            }
+            else{
+                console.log(e.message)
+            }
         }
     };
   };

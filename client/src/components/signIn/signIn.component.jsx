@@ -1,7 +1,11 @@
+import {Button, Form} from 'react-bootstrap'
+
+import {Link} from 'react-router-dom'
 import React from 'react';
-import { connect } from 'react-redux';
-import {Form,Button} from 'react-bootstrap'
 import { asyncLogIn } from '../../redux/users/users.actions';
+import { connect } from 'react-redux';
+import {withRouter} from 'react-router-dom'
+
 class SignIn extends React.Component {
   constructor(props) {
     super(props);
@@ -19,7 +23,9 @@ class SignIn extends React.Component {
     const { value, name } = event.target;
     this.setState({ [name]: value });
   };
-
+  handleOnclick=()=>{
+    this.props.history.push('/password/reset')
+  }
   render() {
     return (<Form>
             <Form.Group controlId="formBasicEmail">
@@ -30,9 +36,14 @@ class SignIn extends React.Component {
             <Form.Label>Password</Form.Label>
             <Form.Control value={this.state.password} name='password' onChange={this.handleChange} type="password" placeholder="Password" />
           </Form.Group>
-          <Button onClick={this.handleSubmit} variant="primary" type="submit">
-            Submit
-          </Button>
+          <div>
+              <Button style={{display:'inline'}} onClick={this.handleSubmit} variant="outline-primary" type="submit">
+                Submit
+              </Button>
+              <Button onClick={this.handleOnclick} style={{display:'inline',marginLeft:'50px'}} variant="outline-danger" type="submit">
+                Forgot Password ?
+              </Button>
+          </div>
         </Form>
     );
   }
@@ -40,4 +51,4 @@ class SignIn extends React.Component {
 const mapDispatchToProps=dispatch=>({
   LOGIN:user=>{dispatch(asyncLogIn(user))}
 })
-export default connect(null,mapDispatchToProps)(SignIn);
+export default withRouter(connect(null,mapDispatchToProps)(SignIn));

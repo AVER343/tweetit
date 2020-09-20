@@ -1,9 +1,11 @@
-import React from 'react'
-import axios from 'axios'
-import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button'
-import { getJWT } from '../../redux/users/users.utils'
+import Form from 'react-bootstrap/Form'
+import React from 'react'
+import { asyncGet } from '../../redux/profile/profile.actions'
+import axios from 'axios'
 import { connect } from 'react-redux'
+import { getJWT } from '../../redux/users/users.utils'
+
 class HomepageComponent extends React.Component{
     constructor(props){
         super(props)
@@ -14,8 +16,12 @@ class HomepageComponent extends React.Component{
             disabled:false
         }
     }
+    componentDidMount(){
+            this.props.ASYNC_GET(this.props.currentUser.username)
+    }
     onSubmit=async (event)=>{
-        event.preventDefault()
+        try{
+            event.preventDefault()
         event.persist()
         const {tweet,caption,fileToUpload}=this.state
         const data = new FormData()
@@ -23,11 +29,12 @@ class HomepageComponent extends React.Component{
           data.append('image', fileToUpload)
           data.append('tweet',tweet.trim())
           data.append('caption',caption.trim())
-          await this.setState({disabled:true})
-          const posted=await axios.post("/tweet", data,{ headers:{'Authorization':`Bearer ${getJWT()}`,"Content-Type": "multipart/form-data"}})
-           if(posted.status==200)
+          const posted=await axios.post("http://localhost:7000/tweet", data,{ headers:{'Authorization':`Bearer ${getJWT()}`,"Content-Type": "multipart/form-data"}})
+          
+          await this.setState({disabled:false})
+          if(posted.status==200)
            {
-              await this.setState({tweet:'',caption:'',fileToUpload:''})
+              await this.setState({tweet:'',caption:'',fileToUpload:null})
               await this.setState({disabled:false})
            }
            else{
@@ -35,11 +42,16 @@ class HomepageComponent extends React.Component{
                alert('Something went wrong !')
                await this.setState({disabled:false})
            }
+           document.getElementById('input').value=''
+        }
+        catch(e){
+            console.log(e.response)
+        }
         }
     fileChangedHandler =(event) => {
         event.persist()
         const file= event.target.files[0]
-        this.setState({fileToUpload:file})
+         this.setState({fileToUpload:file})
         }  
     handleChange=async(event)=>{
         event.persist()
@@ -53,12 +65,18 @@ class HomepageComponent extends React.Component{
     render(){
         return(
             <div >
-            <div style={{verticalAlign:'center',textAlign:'center',marginTop:'10%',fontWeight:'bolder',fontSize:window.innerWidth>600?window.innerWidth/15:window.innerWidth/10}}>TWEETIT</div>
+                
+            <div style={{verticalAlign:'center',textAlign:'center',marginTop:'10%',fontWeight:'bolder',fontSize:window.innerWidth>600?window.innerWidth/15:window.innerWidth/10}}><img
+                    src="https://i.ibb.co/6vjCjWK/OnlyLoGO.png"
+                    width={window.innerWidth>600?window.innerWidth/15:window.innerWidth/10}
+                    height={window.innerWidth>600?window.innerWidth/15:window.innerWidth/10}
+                    className="d-inline-block align-top"
+                /> TWEETIT</div>
             <Form style={{ marginLeft:'auto',marginRight:'auto', verticalAlign:'center',textAlign:'center',margintop:"10%",fontWeight:'bolder', width:window.innerWidth>600?window.innerWidth/3:"100%"}}>
               <Form.Group controlId="formGroupPassword">
                   <Form.Control value={this.state.tweet}  onChange={this.handleChange}  name="tweet" type="text" placeholder="Tweet" style={{marginTop:'10px',marginLeft:'auto',marginRight:'auto'}} />
                   <Form.Control value={this.state.caption}  onChange={this.handleChange} name="caption" type="text" placeholder="Caption" style={{marginTop:'10px',marginLeft:'auto',marginRight:'auto'}} />
-                  <input type='file' onChange={this.fileChangedHandler} />
+                  <input id="input" type='file' onChange={this.fileChangedHandler} />
               <Button disabled={this.state.disabled} onClick={this.onSubmit} style={{marginTop:'10px'}}>TWEETIT</Button>
               </Form.Group>
             </Form>
@@ -66,6 +84,10 @@ class HomepageComponent extends React.Component{
     }
 }
 const mapStateToProps =(state)=>({
-    user:state.user
+    user:state.user,
+    currentUser: state.user,
 })
-export default connect(mapStateToProps)(HomepageComponent)
+const mapDispatchToProps =(dispatch)=>({
+    ASYNC_GET:(name)=>dispatch(asyncGet(name))
+  })
+export default connect(mapStateToProps,mapDispatchToProps)(HomepageComponent)

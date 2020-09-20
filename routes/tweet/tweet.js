@@ -2,26 +2,17 @@ const express =require('express')
 const {Content} =require('../../models/content')
 const HashTag = require('../../models/hashTag')
 const Tweet = require('../../models/tweet')
-const multer =require('multer')
 const sharp =require('sharp')
 const auth = require('../../middlewares/auth')
-const upload=multer({
-    limits: {
-        fileSize: 1000000
-    },
-    fileFilter(req, file, cb) {
-        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-            return cb(new Error('Please upload an image'))
-        }
-        cb(undefined, true)
-    }
-})
+const upload = require('../../middlewares/upload')
 const router = express.Router()
 router.get('/tweet/:username/all',auth,async(req,res)=>{
-    try{
-    const {username}=req.params
-    const tweets =await Tweet.find({username})
-    res.send({tweets})}
+    try
+    {
+        const {username}=req.params
+        const tweets =await Tweet.find({username})
+        res.send({tweets})
+    }
     catch(e)
     {
         res.status(400).send({error:{message:"Something went wrong !"}})

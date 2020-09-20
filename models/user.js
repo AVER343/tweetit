@@ -5,8 +5,13 @@ const UserSchema = new mongoose.Schema({
     name:{
         type:String,
         required : true,
-        trim: true
+        trim: true,
+        unique:true
     },
+    image:Buffer,
+    friends:[{unique:true, type:mongoose.Types.ObjectId,ref:'User'}],
+    reqSent:[{unique:true,type:mongoose.Types.ObjectId,ref:'User'}],
+    reqReceived:[{unique:true,type:mongoose.Types.ObjectId,ref:'User'}],
     email:{
         type:String,
         required:true,
@@ -19,23 +24,59 @@ const UserSchema = new mongoose.Schema({
         required:true,
         trim:true,
         validate(value) {
+            if(value.length<8){
+                throw new Error('Password needs to have more than 7 characters !')
+            }
             if(value.toLowerCase().includes('password'))
             {
                 throw new Error('Password is weak!')
             }
         }
-    },
-    tokens: [{
-        token: {
-            type: String,
-            required: true
-        }
-    }]
+    }, 
+    profile:{
+        name:String,
+        email:String,
+        private:{
+            type:Boolean,
+            default:false
+        },
+        aboutme:{
+            type:String,
+            trim:true,
+            validate(value) {
+                if(!value){
+                    return true
+                }
+                if(value.length>150)
+                {
+                    throw new Error('About Me cannot be longer than 150 words !')
+                }
+            }
+        },
+        fullname:String,
+        age:{
+            type:Number,
+            validate(value) {
+                if(!value){
+                    return true
+                }
+                else if(value<0)
+                {
+                    throw new Error('Age cannot be negative !')
+                }
+            }
+        },
+        onlineTabs:{
+            type:Number,
+            default:0
+        },
+        mobile:Number,
+        address:String
+    }
 })
 UserSchema.methods.toJSON=function(){
     const user =this
     const userObject= user.toObject()
-    delete userObject._id
     delete userObject.__v
     delete userObject.password
     delete userObject.tokens
@@ -55,18 +96,27 @@ UserSchema.statics.findByCredentials=async function(email,password){
     }
   
 }
+let starFunc=(a)=>{
+    let b = a.split('@')
+    b[0]=b[0].split('').map((elem,index)=>index<b[0].length-4?elem:"*")
+    let c=''
+    b[0].map(elem=>{c=c.concat(elem)})
+    return `${c}@${b[1]}`
+}
 UserSchema.methods.generateJWT =async function(res){
     try
     {
         const user = this
-        const JWToken =await jwt.sign({_id: user._id},`SECRET_KEY`)
-        user.tokens=user.tokens.concat({token:JWToken})
+        const JWToken =await jwt.sign({_id: user._id},`JWT_SECRET`)
+        user.profile.name=user.name
+        user.profile.email=starFunc(user.email)
         await user.save()
         return JWToken
     }
     catch(e)
     {
-       return  res.status(400).send({errors:[{error:e.message}]})
+        console.log((e))
+      return res.status(400).send({errors:[{error:'SOmething went Wrong!'}]})
     }
 }
 UserSchema.pre('save', async function (next) {
@@ -75,7 +125,6 @@ UserSchema.pre('save', async function (next) {
     if (user.isModified('password')) {
         user.password = await bcrypt.hash(user.password, 8)
     }
-
     next()
 })
 const User=mongoose.model('User',UserSchema)

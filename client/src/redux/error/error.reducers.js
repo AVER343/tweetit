@@ -5,9 +5,7 @@ const INTIAL_STATE={
 }
 const Error_Reducer = (state=INTIAL_STATE,action)=>{
     switch(action.type){
-        case(ACTION_TYPES.ADD_ERRORS):
-            console.log(action.payload)
-            return ({...action.payload})
+        case(ACTION_TYPES.ADD_ERRORS): return ({...action.payload})
         case(ACTION_TYPES.DELETE_ERRORS):
             return (null)
         default:

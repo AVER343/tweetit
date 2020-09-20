@@ -1,8 +1,9 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
 import { Button, Card } from 'react-bootstrap'
+
+import {Link} from 'react-router-dom'
+import React from 'react'
+
 const SingleCard=(props)=>{
-    console.log(props)
     const{caption,_id,text,image}=props.elem
 
     const getHashtagsFromString=(givenArrayString)=>{
@@ -19,10 +20,7 @@ const SingleCard=(props)=>{
         }
         return hashtags
     }
-    const Example = () => <Card.Img variant="top" src={image!=''?`data:image/jpeg;base64,${image}`:"https://react-bootstrap.netlify.app/logo.svg"} />
-   const handleClick=()=>{
-
-    }
+    const Example = () => image.length>0?<Card.Img variant="top" src={image!=''?`data:image/jpeg;base64,${image}`:"https://react-bootstrap.netlify.app/logo.svg"} />:null
     return(<Card style={{ width: '18rem' ,marginRight:'auto',marginLeft:'auto',marginTop:'auto',marginBottom:'auto'}}  className="mx-auto my-2">
   
   <Card.Body>
@@ -31,7 +29,7 @@ const SingleCard=(props)=>{
     <Card.Text>
       {caption}
     </Card.Text>
-    {getHashtagsFromString(caption).map((elem,index)=><Link to="#">{' '+elem+' ' }</Link>)}
+    {getHashtagsFromString(caption).map((elem,index)=><Link to="#" key={index}>{' '+elem+' ' }</Link>)}
     {/* <Button variant="primary">Get frequency</Button> */}
   </Card.Body>
 </Card>)
