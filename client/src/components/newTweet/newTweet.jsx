@@ -29,7 +29,7 @@ class HomepageComponent extends React.Component{
           data.append('image', fileToUpload)
           data.append('tweet',tweet.trim())
           data.append('caption',caption.trim())
-          const posted=await axios.post("http://localhost:7000/tweet", data,{ headers:{'Authorization':`Bearer ${getJWT()}`,"Content-Type": "multipart/form-data"}})
+          const posted=await axios.post("https://tweetit-react.herokuapp.com//tweet", data,{ headers:{'Authorization':`Bearer ${getJWT()}`,"Content-Type": "multipart/form-data"}})
           
           await this.setState({disabled:false})
           if(posted.status==200)

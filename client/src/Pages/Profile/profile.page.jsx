@@ -40,7 +40,7 @@ class  Profile extends React.Component{
         await this.setState({fileToUpload:file})  
         const data = new FormData()
         data.append('image', this.state.fileToUpload)
-       const post= await axios.post("http://localhost:7000/profile", data,{ headers:{'Authorization':`Bearer ${getJWT()}`,"Content-Type": "multipart/form-data"}})
+       const post= await axios.post("https://tweetit-react.herokuapp.com//profile", data,{ headers:{'Authorization':`Bearer ${getJWT()}`,"Content-Type": "multipart/form-data"}})
        let name=this.props.location.pathname.split('/')
         this.props.GET_DATA(name[2])
         document.getElementById('input').value=''}

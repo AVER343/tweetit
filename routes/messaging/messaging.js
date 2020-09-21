@@ -9,8 +9,13 @@ const mongoose = require('mongoose');
 router.get('/messages/:name',auth,async(req,res)=>{
     const {name} = req.params
     const user = await User.findOne({name})
+    if(!user)
+    {
+        return res.status(400).send({errors:[{error:'User does not exist !'}]})
+    }
     let intersection =[]
-   if(req.user.messageID){
+   if(req.user.messageID)
+   {
     intersection= req.user.messageID.filter(x => user.messageID.includes(x));
    }
     if(intersection.length==0)
@@ -21,6 +26,7 @@ router.get('/messages/:name',auth,async(req,res)=>{
     return res.status(200).send({message:messages})
 })
 router.post('/messages/:name',auth,async(req,res)=>{
+try{
     const {name} = req.params
     const {message}=req.body
     const user = await User.findOne({name})
@@ -54,8 +60,13 @@ router.post('/messages/:name',auth,async(req,res)=>{
     else{
         messages = await Message.findOne({_id:mongoose.Types.ObjectId(intersection[0].toString())})
     }
-    messages.messaging.push({message,author:req.user.name})
+    messages.messaging.push({message,author:req.user.email})
     await messages.save()
+
     return res.status(200).send({message:messages})
+}
+catch(e){
+    console.log(e)
+}
 })
 module.exports = router

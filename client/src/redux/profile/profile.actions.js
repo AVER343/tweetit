@@ -17,7 +17,7 @@ export const UpdateFailure=()=>({
 export const asyncUpdate = (data) => {
     return async (dispatch) => {
     try{
-        const res =await axios({method: 'post', url: `http://localhost:7000/profile`,headers:{'Authorization':`Bearer ${getJWT()}`},data});
+        const res =await axios({method: 'post', url: `https://tweetit-react.herokuapp.com//profile`,headers:{'Authorization':`Bearer ${getJWT()}`},data});
         if(res.status===200)
         {        
            await dispatch(ERROR_DELETING())
@@ -44,12 +44,12 @@ export const asyncGet = (name) => {
         let res
        if(name==getUser().username)
             {
-                 res =await axios({method: 'get', url: `http://localhost:7000/profile`,headers:{'Authorization':`Bearer ${getJWT()}`}});
+                 res =await axios({method: 'get', url: `https://tweetit-react.herokuapp.com//profile`,headers:{'Authorization':`Bearer ${getJWT()}`}});
                  
                 }
             else{
                 await dispatch(UpdateWithImage())
-                res =await axios({method: 'get', url: `http://localhost:7000/profile/${name}`,headers:{'Authorization':`Bearer ${getJWT()}`}});
+                res =await axios({method: 'get', url: `https://tweetit-react.herokuapp.com//profile/${name}`,headers:{'Authorization':`Bearer ${getJWT()}`}});
               }
         if(res.status===200)
         {        
@@ -90,7 +90,7 @@ export const GET_IMAGE = () => {
     return async (dispatch) => {
     try{
         let res
-        res =await axios({method: 'get', url: `http://localhost:7000/profile/`,headers:{'Authorization':`Bearer ${getJWT()}`}});
+        res =await axios({method: 'get', url: `https://tweetit-react.herokuapp.com//profile/`,headers:{'Authorization':`Bearer ${getJWT()}`}});
         if(res.status===200)
         {    
           if(res.data.image){

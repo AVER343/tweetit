@@ -24,7 +24,7 @@ import { asyncGet } from './redux/profile/profile.actions';
 import { connect } from 'react-redux'
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:7000');
+const socket = io('https://tweetit-react.herokuapp.com/');
 let e
 const App= (props)=> { 
   window.addEventListener('beforeunload', function (e) {

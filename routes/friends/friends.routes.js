@@ -81,7 +81,7 @@ router.delete('/friends/request/recieved/:name',auth,async(req,res)=>{
     user.reqSent=user.reqSent.filter(elem=>elem.toString()!=req.user._id.toString())
     await req.user.save()
     await user.save()
-    res.send(200)
+    res.sendStatus(200)
 })
 router.post('/friends/request/recieved/:name',auth,async(req,res)=>{
     const {name}=req.params
@@ -98,7 +98,7 @@ router.post('/friends/request/recieved/:name',auth,async(req,res)=>{
     }
     await req.user.save()
     await user.save()
-    res.send(200)
+    res.sendStatus(200)
 })
 router.get('/friends/all',auth, async(req,res)=>{
     const users=await User.find({_id: { $in: req.user.friends.map(elem=>mongoose.Types.ObjectId(elem.toString()))}}).select('name email image')
