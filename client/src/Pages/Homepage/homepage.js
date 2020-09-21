@@ -1,6 +1,8 @@
-import React from 'react'
 import './homepage.styles.css'
-import { Redirect, Link, withRouter } from 'react-router-dom'
+
+import { Link, Redirect, withRouter } from 'react-router-dom'
+
+import React from 'react'
 import { connect } from 'react-redux'
 import { render } from 'react-dom'
 class HomePage  extends React.Component{
