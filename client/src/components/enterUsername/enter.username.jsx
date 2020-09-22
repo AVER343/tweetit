@@ -11,7 +11,7 @@ const EnterUsername =(props)=>{
     const [email,setEmail] = useState(getUser()?.email?getUser().email:'')
     const OnSubmit =async()=>{
         await props.ERROR_DELETING()
-   try{ let res=await axios({url:`https://tweetit-react.herokuapp.com//password/reset`,method:'POST',data:{email}}) 
+   try{ let res=await axios({url:`http://localhost:7000/password/reset`,method:'POST',data:{email}}) 
    alert('An Email has been sent to the provided email address ! ')
         props.history.push('/') }
     catch(e){

@@ -11,6 +11,7 @@ const messagingRouter= require('./routes/messaging/messaging')
 const ProfileRouter= require('./routes/profile/profile.routes')
 const PasswordRecoveryRouter= require('./routes/password-recovery/password-recovery')
 const tweetRouter= require('./routes/tweet/tweet')
+const feedRouter= require('./routes/feed/feed')
 const friendRouter= require('./routes/friends/friends.routes')
 const cors=require('cors')
 let people=[]
@@ -41,6 +42,7 @@ app.use(PasswordRecoveryRouter)
 app.use(userRouter)
 app.use(friendRouter)
 app.use(messagingRouter)
+app.use(feedRouter)
 io.on('connection', (socket) => {
     socket.on('join', (id) => {
        socket.join(id);

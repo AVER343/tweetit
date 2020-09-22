@@ -4,6 +4,7 @@ const validator = require('validator')
 const ContentSchema = new mongoose.Schema({
     image:Buffer,
     text:String,
+    date: { type: Date, default: Date.now },
     caption:{
         type:String,
         validate(value) {

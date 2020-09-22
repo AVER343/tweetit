@@ -8,15 +8,15 @@ const FriendRequestSent=()=>{
     const [friends,setFriendRequestSent] = useState([])
     useEffect(() => {
         async  function newFunc(){
-            let friends = await  axios({url:'https://tweetit-react.herokuapp.com//friends/sent',method:'GET',headers:{'Authorization':'Bearer '+getJWT()}})
+            let friends = await  axios({url:'http://localhost:7000/friends/sent',method:'GET',headers:{'Authorization':'Bearer '+getJWT()}})
             await setFriendRequestSent(friends.data)
            }
            newFunc()
     },[friends.length])
     const cancelSentRequest=async(props)=>{
         try{
-            await  axios({url:'https://tweetit-react.herokuapp.com//friends/request/sent/'+props.name,method:'DELETE',headers:{'Authorization':'Bearer '+getJWT()}})
-            let friends = await  axios({url:'https://tweetit-react.herokuapp.com//friends/sent',method:'GET',headers:{'Authorization':'Bearer '+getJWT()}})
+            await  axios({url:'http://localhost:7000/friends/request/sent/'+props.name,method:'DELETE',headers:{'Authorization':'Bearer '+getJWT()}})
+            let friends = await  axios({url:'http://localhost:7000/friends/sent',method:'GET',headers:{'Authorization':'Bearer '+getJWT()}})
             await setFriendRequestSent(friends.data)
         }        catch(e){
             console.log(e.response)

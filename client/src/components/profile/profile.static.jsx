@@ -13,7 +13,7 @@ const ProfileStatic=(props)=>{
       async function newFunc(){
         if(props.profile.name)
         {
-        const a = await axios({url:`https://tweetit-react.herokuapp.com//friends/isfriend/${props.profile.name}`,headers:{'Authorization':`Bearer ${getJWT()}`}})
+        const a = await axios({url:`http://localhost:7000/friends/isfriend/${props.profile.name}`,headers:{'Authorization':`Bearer ${getJWT()}`}})
         await  setFriendStatus(a.data.isfriend)
       }
         }
@@ -25,7 +25,7 @@ const ProfileStatic=(props)=>{
 },[isFriend])
     const onSendRequest= async ()=>{
       try{
-        const res= await axios({url:`https://tweetit-react.herokuapp.com//add/friend/${props.profile.name}`,method:'POST',headers:{'Authorization':`Bearer ${getJWT()}`}})
+        const res= await axios({url:`http://localhost:7000/add/friend/${props.profile.name}`,method:'POST',headers:{'Authorization':`Bearer ${getJWT()}`}})
         setFriendStatus(true)      
       }
       catch(e){

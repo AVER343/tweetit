@@ -8,21 +8,23 @@ import {getUser} from '../../redux/users/users.utils'
 import io from 'socket.io-client';
 import {withRouter} from 'react-router-dom'
 
-const socket = io('https://tweetit-react.herokuapp.com/');
+const socket = io('http://localhost:7000/');
 
 const Messaging=(props)=>{
     const [messages,setMessages] =useState([])
     socket.on('new_message',({message,email})=>{
+        console.log(message,email);
             setMessages(messages.concat({message,author:email}))
     })
     useEffect(() => {
         if(messages.length==0)
         {
             async function newFunc(){
-                const newmessages= await axios({url:`https://tweetit-react.herokuapp.com//messages/${props.location.pathname.split('/')[2]}`,method:'GET',headers:{'Authorization':'Bearer '+getJWT()}})
+                const newmessages= await axios({url:`http://localhost:7000/messages/${props.location.pathname.split('/')[2]}`,method:'GET',headers:{'Authorization':'Bearer '+getJWT()}})
                 if((newmessages.data.message[0]))
                 {
                     setMessages(newmessages.data.message[0].messaging)
+                    console.log(newmessages.data.message[0]._id)
                     socket.emit('join',newmessages.data.message[0]._id)
                 }
             }
@@ -34,11 +36,11 @@ const handleClick =async()=>{
     {
         return
     }
-    const newmessage= await axios({url:`https://tweetit-react.herokuapp.com//messages/${props.location.pathname.split('/')[2]}`,method:'POST',data:{message:input},headers:{'Authorization':'Bearer '+getJWT()}})
+    const newmessage= await axios({url:`http://localhost:7000/messages/${props.location.pathname.split('/')[2]}`,method:'POST',data:{message:input},headers:{'Authorization':'Bearer '+getJWT()}})
     if(messages.length==0)
     {
         async function newFunc(){
-            const newmessages= await axios({url:`https://tweetit-react.herokuapp.com//messages/${props.location.pathname.split('/')[2]}`,method:'GET',headers:{'Authorization':'Bearer '+getJWT()}})
+            const newmessages= await axios({url:`http://localhost:7000/messages/${props.location.pathname.split('/')[2]}`,method:'GET',headers:{'Authorization':'Bearer '+getJWT()}})
             if((newmessages.data.message[0]))
             {
                 setMessages(newmessages.data.message[0].messaging)

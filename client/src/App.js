@@ -12,6 +12,7 @@ import FriendsPage from './Pages/Friend/friends.page'
 import Header from './Components/header/header.component'
 import HomepageComponent from './Components/newTweet/newTweet'
 import Messaging from './Components/messaging/messaging.component';
+import MyFeed from './Components/myFeed/myfeed'
 import MyFriends from './Components/my_friends/my_friends.component'
 import NewPassword from './Components/newPassword/newPassword'
 // import OnlineSidebar from './Components/allOnline/oline.sidebar'
@@ -24,7 +25,7 @@ import { asyncGet } from './redux/profile/profile.actions';
 import { connect } from 'react-redux'
 import io from 'socket.io-client';
 
-const socket = io('https://tweetit-react.herokuapp.com/');
+const socket = io('http://localhost:7000/');
 let e
 const App= (props)=> { 
   window.addEventListener('beforeunload', function (e) {
@@ -64,6 +65,7 @@ const App= (props)=> {
       <Route path='/password/reset/:token' component={NewPassword}/>
       <Route path='/friend'render={()=>props.currentUser?<FriendsPage/>:<Redirect to="/login"/>} />
       <Route exact path='/message/:name'render={()=>props.currentUser?<Messaging/>:<Redirect to="/login"/>} />
+      <Route exact path='/feed'render={()=>props.currentUser?<MyFeed/>:<Redirect to="/login"/>} />
       
       </Switch>
     </div>

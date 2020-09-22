@@ -2,10 +2,13 @@ const express =require('express')
 const {Content} =require('../../models/content')
 const HashTag = require('../../models/hashTag')
 const Tweet = require('../../models/tweet')
+const User = require('../../models/user')
 const sharp =require('sharp')
 const auth = require('../../middlewares/auth')
 const upload = require('../../middlewares/upload')
 const router = express.Router()
+const mongoose =require('mongoose')
+const Feed = require('../../models/feed')
 router.get('/tweet/:username/all',auth,async(req,res)=>{
     try
     {
@@ -19,7 +22,8 @@ router.get('/tweet/:username/all',auth,async(req,res)=>{
     }
 })
 router.post('/tweet',upload.any(),auth,async (req,res)=>{
-    const {username,text,caption}=req.body
+    const {username,tweet,caption}=req.body
+    const text=tweet
     let image=''
     try 
     {
@@ -58,17 +62,44 @@ router.post('/tweet',upload.any(),auth,async (req,res)=>{
     if(!existingUser)
     {
         const tweet =new Tweet({username,tweet:[tweetAdded],hashtags:hashtagsInCaption})
-        await tweet.save()
+        const feed = new Feed({username,feed:[mongoose.Types.ObjectId(tweetAdded._id.toString())]})
+        const a =  await tweet.save()
+        const b = await feed.save()
+        Promise.all([a,b])
         res.status(200).send({tweet:tweetAdded,hashtags:hashtagsInCaption})
     }
     else
     {   
         existingUser.tweet.push(tweetAdded)
-        await existingUser.save()
+      
+        const feed =await Feed.findOne({username})
+        feed.feed.push(tweetAdded._id.toString())
+        const user = await User.findOne({name:username}).select('friends')
+        const a =   existingUser.save()
+        const b =  feed.save()
+       await Promise.all([a,b])
+       if(user.friends)
+       {
+        let savingToAllUsers = user.friends.map(async elem=>{
+            const friend =await User.findById({_id:mongoose.Types.ObjectId(elem.toString())})
+            const feed = await Feed.findOne({username:friend.name})
+            if(!feed){
+                const newfeed = new Feed({username,feed:[]})
+                newfeed.feed = [].push(tweetAdded._id.toString())
+                await newfeed.save()
+            }
+            else{
+                feed.feed.push(tweetAdded._id.toString())
+                await feed.save()
+            }
+            return feed
+           })
+       }
         res.status(200).send({tweet:tweetAdded,hashtags:hashtagsInCaption})
     }
 }
     catch(e){
+        console.log(e)
         res.status(400).send({errors:[{message:"Something went wrong !",error:e}]})
     }
 })

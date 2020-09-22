@@ -13,7 +13,7 @@ import { getJWT } from '../../redux/users/users.utils'
 import io from 'socket.io-client';
 import { useState } from 'react'
 
-const socket = io('https://tweetit-react.herokuapp.com/');
+const socket = io('http://localhost:7000/');
 
 const Header=(props)=>{
   const [people,setPeople]=useState(0)
@@ -22,7 +22,7 @@ const Header=(props)=>{
     setPeople(people_count)
   })
   const handleSeached=async(name)=>{
-    const posted=await axios.get(`https://tweetit-react.herokuapp.com//username/${name}`,{ headers:{'Authorization':`Bearer ${getJWT()}`,"Content-Type": "multipart/form-data"}})
+    const posted=await axios.get(`http://localhost:7000/username/${name}`,{ headers:{'Authorization':`Bearer ${getJWT()}`,"Content-Type": "multipart/form-data"}})
     if(posted.status==200)
     {
       if(posted.data.users.length>0)
@@ -51,6 +51,7 @@ const Header=(props)=>{
             <Form inline>
                  <Nav.Link><Link to="/toptags">{"Top Tags".toUpperCase()}</Link></Nav.Link>
                {props.user?<Nav.Link href=""><Link to="/friend">{"Requests".toUpperCase()}</Link></Nav.Link>:null}
+               {props.user?<Nav.Link href=""><Link to="/feed">{"My Feed".toUpperCase()}</Link></Nav.Link>:null}
                {props.user?<Nav.Link href=""><Link to="/friends/all">{"Friends".toUpperCase()}</Link></Nav.Link>:null}
                {props.user?null:<Nav.Link href=""><Link to="/login">{"login".toUpperCase()}</Link></Nav.Link>}
                {props.user?<Nav.Link href="#"><Link to={`/${props.user.username}/all`}>{"your tweets".toUpperCase()}</Link></Nav.Link>:null}
