@@ -15,7 +15,7 @@ const NewPassword=(props)=>{
     const OnSubmit=async()=>{
        await props.ERROR_DELETING()
       try{
-        const res= await axios({url:`localhost:7000/password/reset/${props.location.pathname.split('/')[3]}`,method: 'POST',data:{password,confirmPassword}},)
+        const res= await axios({url:`https://tweetit-react.herokuapp.com/password/reset/${props.location.pathname.split('/')[3]}`,method: 'POST',data:{password,confirmPassword}},)
        if(res.status==200){
            alert('Your Password has been successfully chaanged !')
            props.history.push('/')
