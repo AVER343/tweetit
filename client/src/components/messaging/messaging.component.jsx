@@ -8,7 +8,7 @@ import {getUser} from '../../redux/users/users.utils'
 import io from 'socket.io-client';
 import {withRouter} from 'react-router-dom'
 
-const socket = io('http://localhost:7000/');
+const socket = io('https://tweetit-react.herokuapp.com/');
 
 const Messaging=(props)=>{
     const [messages,setMessages] =useState([])
@@ -20,7 +20,7 @@ const Messaging=(props)=>{
         if(messages.length==0)
         {
             async function newFunc(){
-                const newmessages= await axios({url:`http://localhost:7000/messages/${props.location.pathname.split('/')[2]}`,method:'GET',headers:{'Authorization':'Bearer '+getJWT()}})
+                const newmessages= await axios({url:`https://tweetit-react.herokuapp.com/messages/${props.location.pathname.split('/')[2]}`,method:'GET',headers:{'Authorization':'Bearer '+getJWT()}})
                 if((newmessages.data.message[0]))
                 {
                     setMessages(newmessages.data.message[0].messaging)
@@ -36,11 +36,11 @@ const handleClick =async()=>{
     {
         return
     }
-    const newmessage= await axios({url:`http://localhost:7000/messages/${props.location.pathname.split('/')[2]}`,method:'POST',data:{message:input},headers:{'Authorization':'Bearer '+getJWT()}})
+    const newmessage= await axios({url:`https://tweetit-react.herokuapp.com/messages/${props.location.pathname.split('/')[2]}`,method:'POST',data:{message:input},headers:{'Authorization':'Bearer '+getJWT()}})
     if(messages.length==0)
     {
         async function newFunc(){
-            const newmessages= await axios({url:`http://localhost:7000/messages/${props.location.pathname.split('/')[2]}`,method:'GET',headers:{'Authorization':'Bearer '+getJWT()}})
+            const newmessages= await axios({url:`https://tweetit-react.herokuapp.com/messages/${props.location.pathname.split('/')[2]}`,method:'GET',headers:{'Authorization':'Bearer '+getJWT()}})
             if((newmessages.data.message[0]))
             {
                 setMessages(newmessages.data.message[0].messaging)

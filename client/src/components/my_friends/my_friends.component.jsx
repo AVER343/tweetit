@@ -9,7 +9,7 @@ const MyFriends=()=>{
     const [friends,setFriends] = useState([])
     useEffect(() => {
         let newFunc =async()=>{
-            let friends=  await axios({url:'http://localhost:7000/friends/all',method:'GET',headers:{'Authorization':'Bearer '+getJWT()}})
+            let friends=  await axios({url:'https://tweetit-react.herokuapp.com/friends/all',method:'GET',headers:{'Authorization':'Bearer '+getJWT()}})
             await setFriends(friends.data)
             }
         newFunc()

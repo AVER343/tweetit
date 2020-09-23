@@ -6,7 +6,7 @@ import {getJWT} from '../../redux/users/users.utils'
 
 const MyFeed =()=>{
     useEffect(() => {
-        axios({url:`http://localhost:7000/feed`,method:'GET',headers:{'Authorization':'Bearer '+getJWT()}})
+        axios({url:`https://tweetit-react.herokuapp.com/feed`,method:'GET',headers:{'Authorization':'Bearer '+getJWT()}})
             .then(elem=>{
                 setTweets(elem.data)
                console.log(elem)

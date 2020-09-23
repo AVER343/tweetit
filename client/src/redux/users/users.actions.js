@@ -21,7 +21,7 @@ export const asyncLogIn = (user) => {
     return async (dispatch) => {
         const{email,password}=user
     try{
-        const res=await axios.post('http://localhost:7000/login', {email,password})
+        const res=await axios.post('https://tweetit-react.herokuapp.com/login', {email,password})
         if(res.status===200)
         {        
            await dispatch(ERROR_DELETING())
@@ -44,7 +44,7 @@ export const asyncLogIn = (user) => {
   export const asyncLogOut = () => {
     return async (dispatch) => {
     try{        
-        const res =await axios({method: 'post', url: 'http://localhost:7000/logout',headers:{'Authorization':`Bearer ${getJWT()}`}});
+        const res =await axios({method: 'post', url: 'https://tweetit-react.herokuapp.com/logout',headers:{'Authorization':`Bearer ${getJWT()}`}});
         if(res.status===200)
         {            
             dispatch(Logout())
@@ -63,7 +63,7 @@ export const asyncLogIn = (user) => {
     return async (dispatch) => 
     {
         try{
-            const res=await axios.post('http://localhost:7000/signup', {...user})
+            const res=await axios.post('https://tweetit-react.herokuapp.com/signup', {...user})
             if(res.status===200)
             {         
                 await dispatch(ERROR_DELETING())

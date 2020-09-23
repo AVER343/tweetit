@@ -104,4 +104,8 @@ router.get('/friends/all',auth, async(req,res)=>{
     const users=await User.find({_id: { $in: req.user.friends.map(elem=>mongoose.Types.ObjectId(elem.toString()))}}).select('name email image')
     res.send(users)
 })
+router.get('/friends/unfriend/:username',auth,async(req,res)=>{
+    console.log(req.user.friends)
+    res.send(req.user.friends)
+})
 module.exports=router

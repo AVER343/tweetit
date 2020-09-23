@@ -7,13 +7,13 @@ import {getJWT} from '../../redux/users/users.utils'
 const FriendRequestReceived=()=>{
     const [friends,setFriendRequestReceived] = useState([])
     async  function newFunc(){
-        let friends = await  axios({url:'http://localhost:7000/friends/received',method:'GET',headers:{'Authorization':'Bearer '+getJWT()}})
+        let friends = await  axios({url:'https://tweetit-react.herokuapp.com/friends/received',method:'GET',headers:{'Authorization':'Bearer '+getJWT()}})
         await setFriendRequestReceived(friends.data)
        }
     useEffect(() => { newFunc() },[])
     const cancelReceivedRequest=async (name)=>{
         try{
-            let friends =await axios({url:'http://localhost:7000/friends/request/recieved/'+name,method:'DELETE',headers:{'Authorization':'Bearer '+getJWT()}})
+            let friends =await axios({url:'https://tweetit-react.herokuapp.com/friends/request/recieved/'+name,method:'DELETE',headers:{'Authorization':'Bearer '+getJWT()}})
             if(friends.status==200)
             {
                 newFunc()
@@ -25,7 +25,7 @@ const FriendRequestReceived=()=>{
     }
     const acceptReceivedRequest =async(name)=>{
        try{
-            let friends =await axios({url:'http://localhost:7000/friends/request/recieved/'+name,method:'POST',headers:{'Authorization':'Bearer '+getJWT()}})
+            let friends =await axios({url:'https://tweetit-react.herokuapp.com/friends/request/recieved/'+name,method:'POST',headers:{'Authorization':'Bearer '+getJWT()}})
             if(friends.status==200)
             {
                 newFunc()

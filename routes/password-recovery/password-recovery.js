@@ -46,7 +46,7 @@ router.post('/password/reset',async(req,res)=>{
                 from: 'tweetit.team@gmail.com',
                 subject: 'Tweetit Password Reset',
                 text: 'Password Reset',
-                html: `Hi, <h1>${user.name.toUpperCase()}</h1> Click on the link to reset your password :<a href="${`https://tweetit-react.herokuapp.com//password/reset/${ciphertext}`}"><button type="button" class="btn btn-outline-success">RESET PASSWORD</button></a>`,
+                html: `Hi, <h1>${user.name.toUpperCase()}</h1> Click on the link to reset your password :<a href="${`https://tweetit-react.herokuapp.com/password/reset/${ciphertext}`}"><button type="button" class="btn btn-outline-success">RESET PASSWORD</button></a>`,
         }
             await sgMail.send(msg)
             res.sendStatus(200)
