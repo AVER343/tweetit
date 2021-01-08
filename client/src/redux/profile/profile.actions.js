@@ -18,23 +18,34 @@ export const asyncUpdate = (data) => {
     return async (dispatch) => {
     try{
         const res =await axios({method: 'post', url: `https://tweetit-react.herokuapp.com/profile`,headers:{'Authorization':`Bearer ${getJWT()}`},data});
+        console.log({res})
+        
+       
         if(res.status===200)
         {        
-           await dispatch(ERROR_DELETING())
+          await dispatch(ERROR_DELETING())
+          if(res.data.errors&&res.data.errors.length>0)
+          {
+           dispatch(ERROR_ADDING(res.data))
+          }
            await dispatch(UpdateSuccess(res.data.user))
            await dispatch(UpdateSuccess({isMe:res.data.isMe}))
           let image =  btoa(String.fromCharCode(...new Uint8Array(res.data.image.data)))
            await dispatch(UpdateSuccess({image}))
            await dispatch(UpdateSuccess({temporaryImage:''}))
+           
         }
         else{
-           console.log('error')
+          
         }
     }
     catch(e)
         {
             console.log(JSON.stringify(e))
-                // dispatch(ERROR_ADDING(e.message))
+            if(e.response)
+            {
+             dispatch(ERROR_ADDING(e.response.data))
+            }
         }
     };
   };
@@ -45,12 +56,13 @@ export const asyncGet = (name) => {
        if(name==getUser().username)
             {
                  res =await axios({method: 'get', url: `https://tweetit-react.herokuapp.com/profile`,headers:{'Authorization':`Bearer ${getJWT()}`}});
-                 
+                  
                 }
             else{
                 await dispatch(UpdateWithImage())
                 res =await axios({method: 'get', url: `https://tweetit-react.herokuapp.com/profile/${name}`,headers:{'Authorization':`Bearer ${getJWT()}`}});
               }
+              console.log({res}) 
         if(res.status===200)
         {        
            await dispatch(ERROR_DELETING())
